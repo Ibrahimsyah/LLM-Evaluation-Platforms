@@ -1,0 +1,7 @@
+prompts:
+  - 'Answer this question: {{query}} using this context: {{context}} and prevent giving a follow up question'
+
+providers:
+  - id: openai:gpt-4o-mini
+
+tests: file://simulation.py:generate_tests

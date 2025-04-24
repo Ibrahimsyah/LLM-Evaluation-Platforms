@@ -8,7 +8,7 @@ Promptfoo has many supported dataset format that can be used for the evaluation
 ### Raw - [Documentation](https://www.promptfoo.dev/docs/configuration/parameters/#prompts-from-raw-text)
 This is the default format which imitate how human interact with LLM, we give a prompt and the input and then set the scorer
 
-[View sample](default.yaml)
+[View sample](raw.yaml)
 
 **How to run**
 ```bash
@@ -56,7 +56,22 @@ Assertion can be done using several methods. Promptfoo supports both
 - Able to evaluate any models
 - Has many evaluation methods both traditional and model-assisted
 
+# Simulation
+Here we can simulate a chatbot to interact with our model. We utilize another LLM model to act as human agent while the another LLM is our chatbot agent
+**Step by step**
+1. Create questions with the given scenario
+2. Transform the result into a format that can be recognized by promptfoo
+3. Run promptfoo
+
+**How to run**
+```bash
+make simulation
+```
+
 # Screenshots
+
+## Simulation
+![Simulation result](image.png)
 
 ## Assertion using relevance with threshold 0.7
 ![Assertion failed using relevance](images/relevance-result.png)
