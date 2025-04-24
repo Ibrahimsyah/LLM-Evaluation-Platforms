@@ -71,7 +71,7 @@ make simulation
 # Screenshots
 
 ## Simulation
-![Simulation result](image.png)
+![Simulation result](images/simulation.png)
 
 ## Assertion using relevance with threshold 0.7
 ![Assertion failed using relevance](images/relevance-result.png)
