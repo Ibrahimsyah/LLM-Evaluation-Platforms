@@ -21,13 +21,14 @@ const LLMmodel = "gpt-4o-mini";
 const callLLM = async (
   messages: Message[],
   systemPrompt: string,
+  apiKey: string,
   model: string = LLMmodel
 ): Promise<{ content: string; usage: { total_tokens: number } }> => {
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       model,
@@ -53,6 +54,9 @@ function App() {
     If the hotel chatbot asks a clarifying question (e.g., about your dates or preferences), respond briefly as a human would.
   `
   );
+  const [apiKey, setApiKey] = useState<string>(
+    import.meta.env.VITE_OPENAI_API_KEY
+  );
   const [numTurns, setNumTurns] = useState<number>(3);
   const [conversation, setConversation] = useState<ChatMessage[]>([]);
   const [rawMessages, setRawMessages] = useState<Message[]>([]);
@@ -77,7 +81,7 @@ function App() {
     let humanTokens = 0;
 
     for (let i = 0; i < numTurns; i++) {
-      const botRes = await callLLM(messages, chatbotPrompt);
+      const botRes = await callLLM(messages, chatbotPrompt, apiKey);
       const botMsg: Message = { role: "assistant", content: botRes.content };
       messages.push(botMsg);
       logs.push(botMsg);
@@ -87,7 +91,7 @@ function App() {
         { sender: "Bot", text: botMsg.content },
       ]);
 
-      const humanRes = await callLLM(messages, humanPrompt);
+      const humanRes = await callLLM(messages, humanPrompt, apiKey);
       const userMsg: Message = { role: "user", content: humanRes.content };
       messages.push(userMsg);
       logs.push(userMsg);
@@ -110,7 +114,7 @@ function App() {
     IF it is not hallucinate, simply answer NO HALLUCINATE.
     BUT if it is, explain in detail your analysis.
     `;
-    const judgeRes = await callLLM([], judgePrompt);
+    const judgeRes = await callLLM([], judgePrompt, apiKey);
     setJudgeResult(judgeRes.content);
     setTokenUsage((prev) => ({ ...prev, judge: judgeRes.usage.total_tokens }));
 
@@ -141,6 +145,14 @@ function App() {
       <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>
         🤖 LLM Chatbot Simulation + Evaluation
       </h2>
+
+      <label>🔑 OpenAI Key</label>
+      <textarea
+        value={apiKey}
+        onChange={(e) => setApiKey(e.target.value)}
+        rows={2}
+        style={{ width: "100%" }}
+      />
 
       <label>🧑 Human Prompt</label>
       <textarea
